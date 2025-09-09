@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql2');
+const { Pool } = require('pg');
 const path = require('path');
 const cors = require('cors');
 
@@ -14,103 +14,58 @@ app.use(express.static('public'));
 
 require('dotenv').config();
 
-// Database connection - support both MySQL and PostgreSQL
-let db;
-let isPostgreSQL = false;
-
-if (process.env.DATABASE_URL) {
-  // PostgreSQL for production (Render)
-  console.log('Using PostgreSQL...');
-  const { Pool } = require('pg');
-  db = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  });
-  isPostgreSQL = true;
-} else {
-  // MySQL for local development
-  console.log('Using MySQL...');
-  const mysql = require('mysql2');
-  db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Kuheli@12345',
-    database: 'movies_db'
-  });
-}
+// PostgreSQL connection - exactly like sep_node
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
 console.log('Connecting to database...');
 
-if (isPostgreSQL) {
-  // PostgreSQL connection test
-  db.query('SELECT NOW()', (err, result) => {
+// Test database connection
+pool.connect((err, client, release) => {
+  if (err) {
+    console.error('Database connection failed:', err.message);
+    console.error('Error code:', err.code);
+    process.exit(1);
+  }
+  console.log('Connected to PostgreSQL successfully!');
+  release();
+  
+  // Create movies table if it doesn't exist
+  const createTableQuery = `CREATE TABLE IF NOT EXISTS movies (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    director VARCHAR(255) NOT NULL,
+    genre VARCHAR(100) NOT NULL,
+    release_year INTEGER NOT NULL,
+    rating DECIMAL(3,1) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`;
+  
+  pool.query(createTableQuery, (err) => {
     if (err) {
-      console.error('PostgreSQL connection failed:', err);
-      process.exit(1);
+      console.error('Error creating table:', err);
+      return;
     }
-    console.log('Connected to PostgreSQL successfully!');
-    
-    // Create table for PostgreSQL
-    const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS movies (
-        id SERIAL PRIMARY KEY,
-        title VARCHAR(255) NOT NULL,
-        director VARCHAR(255) NOT NULL,
-        genre VARCHAR(100) NOT NULL,
-        release_year INTEGER NOT NULL,
-        rating DECIMAL(3,1) NOT NULL
-      )
-    `;
-    
-    db.query(createTableQuery, (err) => {
-      if (err) {
-        console.error('Table creation failed:', err);
-      } else {
-        console.log('Movies table ready');
-      }
-    });
+    console.log('Movies table ready');
   });
-} else {
-  // MySQL connection
-  db.connect((err) => {
-    if (err) {
-      console.error('MySQL connection failed:', err.message);
-      process.exit(1);
-    }
-    console.log('Connected to movies_db successfully!');
-  });
-}
+});
 
 // API Routes
 app.get('/api/movies', (req, res) => {
   console.log('Getting all movies...');
-  const query = 'SELECT * FROM movies ORDER BY id DESC';
-  
-  if (isPostgreSQL) {
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Query error:', err);
-        return res.status(500).json({ success: false, message: 'Database error' });
-      }
-      res.json({
-        success: true,
-        data: results.rows,
-        count: results.rows.length
-      });
+  pool.query('SELECT * FROM movies ORDER BY id DESC', (err, results) => {
+    if (err) {
+      console.error('Query error:', err);
+      return res.status(500).json({ success: false, message: 'Database error' });
+    }
+    res.json({
+      success: true,
+      data: results.rows,
+      count: results.rows.length
     });
-  } else {
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error('Query error:', err);
-        return res.status(500).json({ success: false, message: 'Database error' });
-      }
-      res.json({
-        success: true,
-        data: results,
-        count: results.length
-      });
-    });
-  }
+  });
 });
 
 app.post('/api/movies', (req, res) => {
@@ -123,24 +78,18 @@ app.post('/api/movies', (req, res) => {
     });
   }
   
-  const query = isPostgreSQL ?
-    'INSERT INTO movies (title, director, genre, release_year, rating) VALUES ($1, $2, $3, $4, $5) RETURNING id' :
-    'INSERT INTO movies (title, director, genre, release_year, rating) VALUES (?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO movies (title, director, genre, release_year, rating) VALUES ($1, $2, $3, $4, $5) RETURNING id';
   
-  const params = [title, director, genre, release_year, rating];
-  
-  db.query(query, params, (err, results) => {
+  pool.query(query, [title, director, genre, release_year, rating], (err, results) => {
     if (err) {
       console.error('Insert error:', err);
       return res.status(500).json({ success: false, message: 'Failed to add movie' });
     }
     
-    const insertId = isPostgreSQL ? results.rows[0].id : results.insertId;
-    
     res.status(201).json({
       success: true,
       message: 'Movie added successfully!',
-      data: { id: insertId, title, director, genre, release_year, rating }
+      data: { id: results.rows[0].id, title, director, genre, release_year, rating }
     });
   });
 });
