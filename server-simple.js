@@ -49,6 +49,23 @@ pool.connect((err, client, release) => {
       return;
     }
     console.log('Movies table ready');
+    
+    // Add sample data if table is empty
+    pool.query('SELECT COUNT(*) FROM movies', (err, result) => {
+      if (!err && result.rows[0].count == 0) {
+        console.log('Adding sample movies...');
+        const sampleMovies = [
+          ['The Shawshank Redemption', 'Frank Darabont', 'Drama', 1994, 9.3],
+          ['The Godfather', 'Francis Ford Coppola', 'Drama', 1972, 9.2],
+          ['The Dark Knight', 'Christopher Nolan', 'Action', 2008, 9.0]
+        ];
+        
+        sampleMovies.forEach(movie => {
+          pool.query('INSERT INTO movies (title, director, genre, release_year, rating) VALUES ($1, $2, $3, $4, $5)', movie);
+        });
+        console.log('Sample movies added!');
+      }
+    });
   });
 });
 

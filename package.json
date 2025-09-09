@@ -2,16 +2,15 @@
   "name": "movie-catalog-system",
   "version": "1.0.0",
   "description": "Movie catalog system with PostgreSQL database for streaming startup",
-  "main": "server-render.js",
+  "main": "server-simple.js",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "start": "node server-render.js",
+    "start": "node server-simple.js",
     "dev": "nodemon server-simple.js",
-    "dev-render": "nodemon server-render.js",
     "build": "npm install"
   },
   "dependencies": {
