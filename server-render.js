@@ -17,23 +17,40 @@ let db;
 let isPostgreSQL = false;
 
 async function initDatabase() {
+  console.log('🔧 Environment variables:');
+  console.log('DATABASE_URL:', process.env.DATABASE_URL ? 'Set (hidden)' : 'Not set');
+  console.log('DB_TYPE:', process.env.DB_TYPE);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('PORT:', process.env.PORT);
+  
   // Check if we're using PostgreSQL (Render environment)
   if (process.env.DATABASE_URL || process.env.DB_TYPE === 'postgresql') {
     console.log('🐘 Connecting to PostgreSQL...');
     const { Pool } = require('pg');
     
-    // Configure PostgreSQL connection
-    const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-    });
-    
-    db = pool;
-    isPostgreSQL = true;
-    
-    // Create table if it doesn't exist
-    await createPostgreSQLTable();
-    console.log('✅ Connected to PostgreSQL successfully!');
+    try {
+      // Configure PostgreSQL connection
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+      });
+      
+      db = pool;
+      isPostgreSQL = true;
+      
+      // Test the connection
+      await db.query('SELECT NOW()');
+      console.log('✅ PostgreSQL connection test successful!');
+      
+      // Create table if it doesn't exist
+      await createPostgreSQLTable();
+      console.log('✅ Connected to PostgreSQL successfully!');
+      
+    } catch (error) {
+      console.error('❌ PostgreSQL connection failed:', error.message);
+      console.error('Stack trace:', error.stack);
+      throw error;
+    }
     
   } else {
     console.log('🐬 Connecting to MySQL...');
