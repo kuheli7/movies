@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: node-user-registration
+    name: movie-catalog-system
     env: node
     plan: free
     buildCommand: npm install
@@ -8,11 +8,12 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DB_HOST
-        sync: false
-      - key: DB_USER  
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: DB_NAME
-        sync: false
+      - key: DB_TYPE
+        value: postgresql
+    healthCheckPath: /health
+
+databases:
+  - name: movie-catalog-db
+    databaseName: movie_catalog
+    user: movie_user
+    plan: free

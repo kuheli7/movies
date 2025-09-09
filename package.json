@@ -1,25 +1,25 @@
 {
-  "name": "node-user-registration",
+  "name": "movie-catalog-system",
   "version": "1.0.0",
-  "description": "User registration system with MySQL database and file upload",
-  "main": "server.js",
+  "description": "Movie catalog system with PostgreSQL database for streaming startup",
+  "main": "server-render.js",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node server-render.js",
+    "dev": "nodemon server-simple.js",
+    "dev-render": "nodemon server-render.js",
     "build": "npm install"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^4.21.2",
-    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.14.4",
-    "pg": "^8.11.3"
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
@@ -27,12 +27,17 @@
   "keywords": [
     "nodejs",
     "express",
-    "mysql",
+    "postgresql",
+    "movies",
+    "catalog",
+    "streaming",
     "rest-api",
-    "crud"
+    "crud",
+    "render",
+    "deployment"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/lab9.git"
+    "url": "https://github.com/kuheli7/streaming-movies.git"
   }
 }

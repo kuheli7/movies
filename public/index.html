@@ -3,164 +3,377 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Node</title>
+  <title>Movie Catalog System</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-black text-white min-h-screen py-8">
-  <div class="container mx-auto px-4">
-    <div class="bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-md mx-auto mb-8">
-      <h2 class="text-2xl font-bold mb-8 text-center">Register User</h2>
-      <form id="registerForm" enctype="multipart/form-data" class="space-y-4">
-        <input type="text" name="name" placeholder="Name" class="w-full p-3 rounded bg-black border border-slate-600 text-white focus:border-gray-400 focus:outline-none" required>
-        <input type="email" name="email" placeholder="Email" class="w-full p-3 rounded bg-black border border-slate-600 text-white focus:border-gray-400 focus:outline-none" required>
-        <input type="text" name="phone" placeholder="Phone Number" class="w-full p-3 rounded bg-black border border-slate-600 text-white focus:border-gray-400 focus:outline-none" required>
-        <input type="file" name="profilePic" accept="image/*" class="w-full p-3 rounded bg-black border border-slate-600 text-white file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-600 file:text-white" required>
-        <button type="submit" class="w-full bg-gray-500 hover:bg-gray-400 text-white p-3 rounded font-bold transition-colors duration-200 mt-6">Register</button>
+<body class="bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white min-h-screen" style="background-color: #0d1117;">
+  <!-- Header -->
+  <header class="bg-black/40 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
+      <h1 class="text-3xl font-bold text-center">
+        Movie Catalog System
+        <span class="text-slate-400 text-sm block font-normal">Streaming Startup Database</span>
+      </h1>
+    </div>
+  </header>
+
+  <div class="container mx-auto px-4 py-8">
+    <!-- Add Movie Form -->
+    <div class="bg-white/5 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/10 mb-8 max-w-2xl mx-auto" style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+      <h2 class="text-2xl font-bold mb-6 text-center text-slate-200">
+        Add New Movie
+      </h2>
+      
+      <form id="movieForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">
+              Title
+            </label>
+            <input type="text" name="title" placeholder="Enter movie title" 
+                   class="w-full p-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/30 backdrop-blur-sm" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-2">
+              Director
+            </label>
+            <input type="text" name="director" placeholder="Enter director name" 
+                   class="w-full p-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/30 backdrop-blur-sm" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-2" style="color: #9ca3af;">
+              Genre
+            </label>
+            <select name="genre" 
+                    class="w-full p-3 rounded-xl border focus:outline-none focus:ring-2 backdrop-blur-sm" 
+                    style="
+                      background: rgba(255, 255, 255, 0.95);
+                      border: 1px solid rgba(255, 255, 255, 0.2);
+                      color: #1f2937;
+                      backdrop-filter: blur(10px);
+                    "
+                    onfocus="this.style.borderColor='rgba(59, 130, 246, 0.5)'; this.style.boxShadow='0 0 0 2px rgba(59, 130, 246, 0.3)'"
+                    onblur="this.style.borderColor='rgba(255, 255, 255, 0.2)'; this.style.boxShadow='none'" required>
+              <option value="" style="color: #6b7280;">Select Genre</option>
+              <option value="Action" style="color: #1f2937;">Action</option>
+              <option value="Comedy" style="color: #1f2937;">Comedy</option>
+              <option value="Drama" style="color: #1f2937;">Drama</option>
+              <option value="Horror" style="color: #1f2937;">Horror</option>
+              <option value="Romance" style="color: #1f2937;">Romance</option>
+              <option value="Sci-Fi" style="color: #1f2937;">Sci-Fi</option>
+              <option value="Thriller" style="color: #1f2937;">Thriller</option>
+              <option value="Adventure" style="color: #1f2937;">Adventure</option>
+              <option value="Animation">Animation</option>
+              <option value="Documentary">Documentary</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium mb-2">
+              Release Year
+            </label>
+            <input type="number" name="release_year" placeholder="e.g., 2023" min="1900" max="2030"
+                   class="w-full p-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/30 backdrop-blur-sm" required>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            Rating (0-10)
+          </label>
+          <input type="number" name="rating" placeholder="e.g., 8.5" min="0" max="10" step="0.1"
+                 class="w-full p-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-slate-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30 backdrop-blur-sm" required>
+        </div>
+        
+        <button type="submit" class="w-full bg-blue-600/90 hover:bg-blue-500 text-white p-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-[1.02] backdrop-blur-sm border border-blue-500/30 shadow-lg">
+          <span id="submitButtonText">Add Movie</span>
+        </button>
       </form>
-      <div id="message" class="mt-6 p-4 text-center rounded-lg min-h-[50px] flex items-center justify-center"></div>
+      
+      <div id="message" class="mt-6 p-4 text-center rounded-xl min-h-[50px] flex items-center justify-center bg-white/5 backdrop-blur-sm border border-white/10"></div>
     </div>
 
-    <div class="bg-slate-800 p-8 rounded-lg shadow-lg w-full max-w-4xl mx-auto">
-      <h2 class="text-xl font-bold mb-6 text-center">Registered Users</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-400">
-          <thead class="text-xs uppercase bg-slate-700 text-gray-200">
-            <tr>
-              <th class="px-4 py-3">Profile</th>
-              <th class="px-4 py-3">Name</th>
-              <th class="px-4 py-3">Email</th>
-              <th class="px-4 py-3">Phone</th>
-              <th class="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersTable"></tbody>
-        </table>
+    <!-- Movies Display -->
+    <div class="bg-white/5 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/10" style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-slate-200">
+          Movie Collection
+          <span id="movieCount" class="text-sm text-slate-400 ml-3 font-normal"></span>
+        </h2>
+        
+        <!-- Search and Filter -->
+        <div class="flex space-x-3">
+          <input type="text" id="searchInput" placeholder="Search movies..." 
+                 class="p-2 rounded-xl bg-white/5 border border-white/20 text-white placeholder-slate-400 focus:border-blue-400 focus:outline-none text-sm backdrop-blur-sm">
+          <select id="genreFilter" 
+                  class="p-2 rounded-xl border focus:outline-none text-sm backdrop-blur-sm"
+                  style="
+                    background: rgba(255, 255, 255, 0.95);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    color: #1f2937;
+                    backdrop-filter: blur(10px);
+                  "
+                  onfocus="this.style.borderColor='rgba(20, 184, 166, 0.5)'"
+                  onblur="this.style.borderColor='rgba(255, 255, 255, 0.2)'">
+            <option value="" style="color: #6b7280;">All Genres</option>
+            <option value="Action" style="color: #1f2937;">Action</option>
+            <option value="Comedy" style="color: #1f2937;">Comedy</option>
+            <option value="Drama" style="color: #1f2937;">Drama</option>
+            <option value="Horror" style="color: #1f2937;">Horror</option>
+            <option value="Romance" style="color: #1f2937;">Romance</option>
+            <option value="Sci-Fi" style="color: #1f2937;">Sci-Fi</option>
+            <option value="Thriller" style="color: #1f2937;">Thriller</option>
+            <option value="Adventure" style="color: #1f2937;">Adventure</option>
+            <option value="Animation" style="color: #1f2937;">Animation</option>
+            <option value="Documentary" style="color: #1f2937;">Documentary</option>
+          </select>
+        </div>
       </div>
-      <div id="userMessage" class="mt-6 p-4 text-center rounded-lg min-h-[40px] flex items-center justify-center"></div>
+      
+      <!-- Movies Grid -->
+      <div id="moviesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Movies will be loaded here -->
+      </div>
+      
+      <div id="movieMessage" class="mt-6 p-4 text-center rounded-xl min-h-[40px] flex items-center justify-center text-slate-400 bg-white/5 backdrop-blur-sm border border-white/10">
+        Loading movies...
+      </div>
     </div>
   </div>
   <script>
     let editingId = null;
+    let allMovies = [];
 
-    async function loadUsers() {
-      const res = await fetch('/api/users');
-      const result = await res.json();
-      const table = document.getElementById('usersTable');
-      table.innerHTML = '';
-      if(result.success && result.data.length) {
-        result.data.forEach(user => {
-          table.innerHTML += `
-            <tr class="border-b border-slate-700 hover:bg-slate-700 transition-colors">
-              <td class="px-4 py-4"><img src="/uploads/${user.profilePic}" alt="Profile" class="w-12 h-12 rounded-full object-cover border-2 border-gray-600"></td>
-              <td class="px-4 py-4 font-medium">${user.name}</td>
-              <td class="px-4 py-4">${user.email}</td>
-              <td class="px-4 py-4">${user.phone}</td>
-              <td class="px-4 py-4">
-                <button onclick="editUser(${user.id})" class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-2 rounded mr-2 text-xs font-medium transition-colors">Edit</button>
-                <button onclick="deleteUser(${user.id})" class="bg-red-600 hover:bg-red-500 text-white px-3 py-2 rounded text-xs font-medium transition-colors">Delete</button>
-              </td>
-            </tr>
-          `;
-        });
-      } else {
-        table.innerHTML = '<tr><td colspan="5" class="text-center py-4">No users found.</td></tr>';
-      }
-    }
-
-    window.editUser = async function(id) {
-      editingId = id;
-      const res = await fetch(`/api/users`);
-      const result = await res.json();
-      const user = result.data.find(u => u.id == id);
-      if(user) {
-        const form = document.getElementById('registerForm');
-        form.name.value = user.name;
-        form.email.value = user.email;
-        form.phone.value = user.phone;
-        document.getElementById('message').textContent = 'Editing user: ' + user.name;
-      }
-    }
-
-    window.deleteUser = async function(id) {
-      if(confirm('Are you sure you want to delete this user?')) {
-        const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
-        const result = await res.json();
-        
-        const userMessageDiv = document.getElementById('userMessage');
-        if (result.success) {
-          userMessageDiv.className = 'mt-6 p-4 text-center rounded-lg min-h-[40px] flex items-center justify-center bg-green-600 text-white font-medium';
-          userMessageDiv.innerHTML = `<div><svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>${result.message}</div>`;
-        } else {
-          userMessageDiv.className = 'mt-6 p-4 text-center rounded-lg min-h-[40px] flex items-center justify-center bg-red-600 text-white font-medium';
-          userMessageDiv.innerHTML = `<div><svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>${result.message}</div>`;
-        }
-        
-        loadUsers();
-        
-        // Clear message after 3 seconds
-        setTimeout(() => {
-          userMessageDiv.className = 'mt-6 p-4 text-center rounded-lg min-h-[40px] flex items-center justify-center';
-          userMessageDiv.textContent = '';
-        }, 3000);
-      }
-    }
-
-    document.getElementById('registerForm').onsubmit = async function(e) {
-      e.preventDefault();
-      console.log('Form submitted!');
-      const form = e.target;
-      const formData = new FormData(form);
-      
-      // Debug: Check form data
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-      
-      let url = '/api/register', method = 'POST';
-      if(editingId) {
-        url = `/api/users/${editingId}`;
-        method = 'PUT';
-      }
-      
-      console.log('Sending request to:', url);
-      document.getElementById('message').textContent = 'Submitting...';
-      
+    // Load movies from API
+    async function loadMovies() {
       try {
-        const res = await fetch(url, {
-          method,
-          body: formData
-        });
-        console.log('Response status:', res.status);
-        const result = await res.json();
-        console.log('Response data:', result);
+        const response = await fetch('/api/movies');
+        const result = await response.json();
         
-        // Style the message based on success/failure
-        const messageDiv = document.getElementById('message');
         if (result.success) {
-          messageDiv.className = 'mt-6 p-4 text-center rounded-lg min-h-[50px] flex items-center justify-center bg-green-600 text-white font-medium';
-          messageDiv.innerHTML = `<div><svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>${result.message}</div>`;
-        } else {
-          messageDiv.className = 'mt-6 p-4 text-center rounded-lg min-h-[50px] flex items-center justify-center bg-red-600 text-white font-medium';
-          messageDiv.innerHTML = `<div><svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>${result.message}</div>`;
-        }
-        
-        if(result.success) {
-          form.reset();
-          editingId = null;
-          loadUsers();
-          // Clear message after 5 seconds
-          setTimeout(() => {
-            messageDiv.className = 'mt-6 p-4 text-center rounded-lg min-h-[50px] flex items-center justify-center';
-            messageDiv.textContent = '';
-          }, 5000);
+          allMovies = result.data;
+          displayMovies(allMovies);
+          updateMovieCount(result.count);
+          
+          if (result.count === 0) {
+            document.getElementById('movieMessage').innerHTML = `
+              <div class="text-center">
+                <p class="text-slate-400">No movies in the catalog yet. Add the first movie!</p>
+              </div>
+            `;
+          } else {
+            document.getElementById('movieMessage').style.display = 'none';
+          }
         }
       } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('message').textContent = 'Error: ' + error.message;
+        console.error('Error loading movies:', error);
+        document.getElementById('movieMessage').innerHTML = `
+          <div class="text-red-400 bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-4">
+            Error loading movies. Please refresh the page.
+          </div>
+        `;
+      }
+    }
+
+    // Display movies in grid
+    function displayMovies(movies) {
+      const grid = document.getElementById('moviesGrid');
+      
+      if (movies.length === 0) {
+        grid.innerHTML = '';
+        document.getElementById('movieMessage').innerHTML = `
+          <div class="text-center">
+            <p class="text-slate-400">No movies match your search criteria.</p>
+          </div>
+        `;
+        document.getElementById('movieMessage').style.display = 'flex';
+        return;
+      }
+      
+      document.getElementById('movieMessage').style.display = 'none';
+      
+      grid.innerHTML = movies.map(movie => `
+        <div class="p-6 rounded-2xl border transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl" style="
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        " onmouseover="this.style.background='rgba(255, 255, 255, 0.06)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.04)'">
+          <div class="flex justify-between items-start mb-4">
+            <h3 class="text-xl font-bold line-clamp-2" style="color: #f9fafb;">${movie.title}</h3>
+            <div class="px-3 py-1 rounded-full transition-all duration-200" style="
+              background: rgba(255, 255, 255, 0.08);
+              border: 1px solid rgba(255, 215, 0, 0.2);
+            " onmouseover="this.style.boxShadow='0 0 12px rgba(255, 215, 0, 0.3)'" onmouseout="this.style.boxShadow='none'">
+              <span class="text-sm font-bold" style="color: #FFD700;">${movie.rating}/10</span>
+            </div>
+          </div>
+          
+          <div class="space-y-2 mb-4 text-sm">
+            <div class="flex items-center">
+              <span class="font-medium mr-2" style="color: #9ca3af;">Director:</span>
+              <span style="color: #f9fafb;">${movie.director}</span>
+            </div>
+            <div class="flex items-center">
+              <span class="font-medium mr-2" style="color: #9ca3af;">Genre:</span>
+              <span style="color: #34d399;">${movie.genre}</span>
+            </div>
+            <div class="flex items-center">
+              <span class="font-medium mr-2" style="color: #9ca3af;">Year:</span>
+              <span style="color: #f9fafb;">${movie.release_year}</span>
+            </div>
+          </div>
+          
+          <div class="flex space-x-2">
+            <button onclick="editMovie(${movie.id})" 
+                    class="flex-1 px-3 py-2 text-sm font-medium text-white transition-all duration-200 transform hover:scale-[1.02]" 
+                    style="
+                      background: linear-gradient(90deg, #0ea5e9, #3b82f6);
+                      box-shadow: 0 3px 12px rgba(14, 165, 233, 0.4);
+                      border-radius: 0.75rem;
+                      border: none;
+                    "
+                    onmouseover="this.style.boxShadow='0 4px 16px rgba(14, 165, 233, 0.6)'"
+                    onmouseout="this.style.boxShadow='0 3px 12px rgba(14, 165, 233, 0.4)'">
+              Edit
+            </button>
+            <button onclick="deleteMovie(${movie.id})" 
+                    class="flex-1 px-3 py-2 text-sm font-medium text-white transition-all duration-200 transform hover:scale-[1.02]" 
+                    style="
+                      background: linear-gradient(90deg, #7c3aed, #a855f7);
+                      box-shadow: 0 3px 12px rgba(124, 58, 237, 0.4);
+                      border-radius: 0.75rem;
+                      border: none;
+                    "
+                    onmouseover="this.style.boxShadow='0 4px 16px rgba(124, 58, 237, 0.6)'"
+                    onmouseout="this.style.boxShadow='0 3px 12px rgba(124, 58, 237, 0.4)'">
+              Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update movie count
+    function updateMovieCount(count) {
+      document.getElementById('movieCount').textContent = `(${count} movies)`;
+    }
+
+    // Edit movie
+    window.editMovie = function(id) {
+      const movie = allMovies.find(m => m.id === id);
+      if (movie) {
+        editingId = id;
+        const form = document.getElementById('movieForm');
+        form.title.value = movie.title;
+        form.director.value = movie.director;
+        form.genre.value = movie.genre;
+        form.release_year.value = movie.release_year;
+        form.rating.value = movie.rating;
+        
+        document.getElementById('submitButtonText').textContent = 'Update Movie';
+        document.getElementById('message').innerHTML = `
+          <div class="text-blue-400 bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 rounded-xl p-4">
+            Editing: ${movie.title}
+          </div>
+        `;
       }
     };
 
-    loadUsers();
+    // Delete movie
+    window.deleteMovie = function(id) {
+      const movie = allMovies.find(m => m.id === id);
+      if (movie && confirm(`Are you sure you want to delete "${movie.title}"?`)) {
+        fetch(`/api/movies/${id}`, { method: 'DELETE' })
+          .then(response => response.json())
+          .then(result => {
+            showMessage(result.success ? 'success' : 'error', result.message);
+            if (result.success) loadMovies();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showMessage('error', 'Error deleting movie');
+          });
+      }
+    };
+
+    // Show message
+    function showMessage(type, message) {
+      const messageDiv = document.getElementById('message');
+      const bgColor = type === 'success' ? 'bg-green-500/20 border-green-400/30 text-green-300 backdrop-blur-sm' : 'bg-red-500/20 border-red-400/30 text-red-300 backdrop-blur-sm';
+      
+      messageDiv.className = `mt-6 p-4 text-center rounded-xl border ${bgColor} font-medium`;
+      messageDiv.innerHTML = message;
+      
+      setTimeout(() => {
+        messageDiv.className = 'mt-6 p-4 text-center rounded-xl min-h-[50px] flex items-center justify-center bg-white/5 backdrop-blur-sm border border-white/10';
+        messageDiv.textContent = '';
+      }, 3000);
+    }
+
+    // Search and filter functionality
+    function filterMovies() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const selectedGenre = document.getElementById('genreFilter').value;
+      
+      const filteredMovies = allMovies.filter(movie => {
+        const matchesSearch = movie.title.toLowerCase().includes(searchTerm) ||
+                            movie.director.toLowerCase().includes(searchTerm);
+        const matchesGenre = !selectedGenre || movie.genre === selectedGenre;
+        return matchesSearch && matchesGenre;
+      });
+      
+      displayMovies(filteredMovies);
+      updateMovieCount(filteredMovies.length);
+    }
+
+    // Event listeners
+    document.getElementById('searchInput').addEventListener('input', filterMovies);
+    document.getElementById('genreFilter').addEventListener('change', filterMovies);
+
+    // Form submission
+    document.getElementById('movieForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      const movieData = {
+        title: formData.get('title'),
+        director: formData.get('director'),
+        genre: formData.get('genre'),
+        release_year: parseInt(formData.get('release_year')),
+        rating: parseFloat(formData.get('rating'))
+      };
+      
+      const url = editingId ? `/api/movies/${editingId}` : '/api/movies';
+      const method = editingId ? 'PUT' : 'POST';
+      
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(movieData)
+        });
+        
+        const result = await response.json();
+        showMessage(result.success ? 'success' : 'error', result.message);
+        
+        if (result.success) {
+          e.target.reset();
+          editingId = null;
+          document.getElementById('submitButtonText').textContent = 'Add Movie';
+          loadMovies();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showMessage('error', 'Error saving movie');
+      }
+    });
+
+    // Load movies on page load
+    loadMovies();
   </script>
 </body>
 </html>

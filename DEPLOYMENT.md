@@ -1,113 +1,87 @@
-# Render Deployment Checklist
+# 🚀 Render Deployment Guide
 
-## ✅ Pre-Deployment Checklist
+## 📋 Prerequisites
+- GitHub repository with your code
+- Render account (free tier available)
 
-### 1. Database Setup
-- [ ] Create production MySQL database (PlanetScale/Railway/Aiven)
-- [ ] Run the database schema from `node_sql.sql`
-- [ ] Note down database connection details
+## 🔧 Deployment Steps
 
-### 2. Code Preparation
-- [ ] All dependencies listed in package.json ✅
-- [ ] Start script configured: `"start": "node server.js"` ✅
-- [ ] Environment variables configured ✅
-- [ ] Production-ready server configuration ✅
+### 1. **Push Code to GitHub**
+```bash
+git add .
+git commit -m "Prepare for Render deployment"
+git push origin main
+```
 
-### 3. Environment Variables (Set in Render Dashboard)
+### 2. **Create PostgreSQL Database on Render**
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click "New" → "PostgreSQL"
+3. Fill in details:
+   - **Name**: `movie-catalog-db`
+   - **Database**: `movie_catalog`
+   - **User**: `movie_user` 
+   - **Plan**: Free
+4. Click "Create Database"
+5. **Save the connection details** (you'll need the DATABASE_URL)
+
+### 3. **Deploy Web Service**
+1. Click "New" → "Web Service"
+2. Connect your GitHub repository
+3. Fill in details:
+   - **Name**: `movie-catalog-system`
+   - **Environment**: Node
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Plan**: Free
+
+### 4. **Configure Environment Variables**
+In the web service settings, add:
 ```
 NODE_ENV=production
-DB_HOST=your_database_host
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_NAME=node
+DB_TYPE=postgresql
+DATABASE_URL=<your_postgresql_connection_string>
 ```
 
-### 4. Git Repository
-- [ ] Initialize git: `git init`
-- [ ] Add files: `git add .`
-- [ ] Commit: `git commit -m "Initial commit"`
-- [ ] Push to GitHub: `git remote add origin [URL] && git push -u origin main`
-
-## 🚀 Deployment Steps
-
-### 1. Render Setup
-1. Go to [render.com](https://render.com)
-2. Click "New +" → "Web Service"
-3. Connect GitHub repository
-4. Configure service:
-   - **Name:** `node-user-registration`
-   - **Environment:** `Node`
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-   - **Plan:** Free
-
-### 2. Environment Variables
-Add these in Render dashboard → Environment:
-- `NODE_ENV` = `production`
-- `DB_HOST` = `your_database_host`
-- `DB_USER` = `your_database_user`
-- `DB_PASSWORD` = `your_database_password`
-- `DB_NAME` = `node`
-
-### 3. Deploy
+### 5. **Deploy**
 - Click "Create Web Service"
-- Wait for build and deployment
-- Test your application
+- Render will automatically build and deploy your app
+- Your app will be available at: `https://your-app-name.onrender.com`
 
-## 🔧 Recommended Database Providers
+## 🔗 **Features Ready for Production:**
+✅ **Dual Database Support**: MySQL (local) + PostgreSQL (production)
+✅ **Auto Table Creation**: Creates tables and sample data automatically
+✅ **Health Check**: `/health` endpoint for monitoring
+✅ **Environment Detection**: Automatically switches between databases
+✅ **CORS Enabled**: Ready for frontend consumption
+✅ **Static File Serving**: Serves your HTML/CSS/JS files
+✅ **Error Handling**: Comprehensive error responses
 
-### PlanetScale (Recommended)
-- ✅ Free tier available
-- ✅ Serverless MySQL
-- ✅ Easy setup
-- 🔗 [planetscale.com](https://planetscale.com)
+## 📊 **API Endpoints:**
+- `GET /api/movies` - Get all movies
+- `POST /api/movies` - Add new movie  
+- `PUT /api/movies/:id` - Update movie
+- `DELETE /api/movies/:id` - Delete movie
+- `GET /health` - Health check
 
-### Railway
-- ✅ $5/month for MySQL
-- ✅ Simple setup
-- 🔗 [railway.app](https://railway.app)
+## 🛠 **Local Development:**
+```bash
+# Install dependencies
+npm install
 
-### Aiven
-- ✅ Free trial
-- ✅ Managed MySQL
-- 🔗 [aiven.io](https://aiven.io)
+# Start development server (MySQL)
+npm run dev
 
-## 📝 Post-Deployment
+# Test production server locally (requires PostgreSQL)
+npm run dev-render
+```
 
-### Testing
-- [ ] Visit your Render URL
-- [ ] Test user registration
-- [ ] Test file upload
-- [ ] Test CRUD operations
-- [ ] Check database connections
-
-### Monitoring
+## 🐛 **Troubleshooting:**
 - Check Render logs for any errors
-- Monitor database performance
-- Set up alerts if needed
+- Ensure DATABASE_URL is correctly set
+- Verify PostgreSQL database is running
+- Check that all environment variables are configured
 
-## 🆘 Troubleshooting
-
-### Common Issues:
-1. **Database connection failed**
-   - Check environment variables
-   - Verify database credentials
-   - Ensure database is accessible from external IPs
-
-2. **File upload not working**
-   - Render has ephemeral storage
-   - Consider using cloud storage (AWS S3, Cloudinary) for production
-
-3. **Build failures**
-   - Check Node.js version compatibility
-   - Verify all dependencies are in package.json
-
-### Render-Specific Notes:
-- Render provides ephemeral storage (files reset on redeploy)
-- Free tier has 750 hours/month
-- Cold starts may cause initial delay
-- Static files are served automatically
-
-## 🎉 Success!
-Once deployed, your app will be available at:
-`https://your-app-name.onrender.com`
+## 📝 **Notes:**
+- Free tier may have cold starts (initial delay)
+- Database will persist data between deployments
+- Logs available in Render dashboard
